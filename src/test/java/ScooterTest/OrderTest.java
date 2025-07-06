@@ -1,31 +1,45 @@
-package ScooterTest;
+package scootertest;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import static ScooterTest.Resources.*;
+import pages.HomePageScooter;
+import pages.OrderPageScooter;
+import java.time.Duration;
+
+import static scootertest.Resources.*;
 
 public class OrderTest {
     private WebDriver driver;
 
-    @ParameterizedTest
-    @MethodSource("getDateSetForOrder")
-    public void OrderPositiveTest(String name, String surname, String address, String subway, String phoneNumber, String date, String rentalPeriod, String color, String comment) throws Exception {
+    @BeforeEach
+    public void startDriver(){
         // Создать веб-драйвер для Firefox
         driver = new FirefoxDriver();
+        // Очистить куки
+        driver.manage().deleteAllCookies();
+        // Установить отображения элемента страницы - 10 секунд
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        // Установить время ожидания загрузки страницы - 10 секунд
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(10));
+    }
+
+    @ParameterizedTest
+    @MethodSource("getDateSetForOrder")
+    public void orderPositiveTest(String name, String surname, String address, String subway, String phoneNumber, String date, String rentalPeriod, String color, String comment) throws Exception {
         // Открыть страницу заказа Яндекс Самокат
-        driver.get("https://qa-scooter.praktikum-services.ru");
+        driver.get(MAIN_PAGE_SCOOTER);
         // Создать объект класса с домашней страницей
         HomePageScooter objHomePage = new HomePageScooter(driver);
+        // Принять куки
+        objHomePage.acceptCookieButtonClick();
         // Нажать на кнопку Заказать на чердаке
         objHomePage.clickHeaderOrderButton();
         // Создать объект класса со страницей заказа
         OrderPageScooter objOrderPage = new OrderPageScooter(driver);
-        // Принять куки
-        objOrderPage.acceptCookieButtonClick();
         // Позитивный сценарий оформления заказа
         objOrderPage.setName(name);
         objOrderPage.setSurname(surname);
@@ -40,7 +54,7 @@ public class OrderTest {
         objOrderPage.clickOrderCreateButton();
         objOrderPage.clickOrderConfirmButton();
         // Проверить, что открылась страница успешного создания заказа
-        objOrderPage.isPageOpen(objOrderPage.getConfirmHeader(), confirmHeader);
+        objOrderPage.isPageOpen(objOrderPage.getConfirmHeader(), CONFIRM_HEADER);
     }
 
     public static Object[][] getDateSetForOrder() {
@@ -51,6 +65,6 @@ public class OrderTest {
     }
 
     @AfterEach
-    void teardown() { driver.quit();
+    void tearDown() { driver.quit();
     }
 }

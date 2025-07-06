@@ -1,4 +1,4 @@
-package ScooterTest;
+package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -8,9 +8,6 @@ public class OrderPageScooter {
     private WebDriver driver;
     private By orderHeader = By.xpath(".//div[text()='Для кого самокат']");
     private By aboutOrderHeader = By.xpath(".//div[text()='Про аренду']");
-    private By acceptCookieButton = By.xpath(".//button[text()='да все привыкли']");
-    //    private By newOrderScooterButton = By.xpath(".//button[text()='Заказать']");
-    // Имя
     private By nameField = By.xpath(".//input[@placeholder='* Имя']");
     // Фамилия
     private By surnameField = By.xpath(".//input[@placeholder='* Фамилия']");
@@ -31,16 +28,9 @@ public class OrderPageScooter {
     // Кнопка Заказать
     private By orderCreateButton = By.xpath("//div[contains(@class,'Order_Buttons')]/button[text()='Заказать']");
     // Кнопка подтверждения заказа
-    private By orderConfirmButton = By.xpath(".//button[text()='Да']");
+    private By orderConfirmButton = By.xpath("//button[@class='Button_Button__ra12g Button_Middle__1CSJM' and text()='Да']");
     // Кнопка посмотреть статус
     private By confirmHeader = By.xpath(".//button[text()='Посмотреть статус']");
-
-//    private By errorMessageNameField = By.xpath(".//div[@class='Input_ErrorMessage__3HvIb' and text()='Введите корректное имя']");
-//    private By errorMessageSurnameField = By.xpath(".//div[@class='Input_ErrorMessage__3HvIb' and text()='Введите корректную фамилию']");
-//    private By errorMessageAddressField = By.xpath(".//div[@class='Input_ErrorMessage__3HvIb' and text()='Введите корректный адрес']");
-//    private By errorMessageSubwayField = By.xpath(".//div[@class='Order_MetroError__1BtZb' and text()='Выберите станцию']");
-//    private By errorMessagePhoneNumberField = By.xpath(".//div[@class='Input_ErrorMessage__3HvIb' and text()='Введите корректный номер']");
-
 
     public OrderPageScooter(WebDriver driver){
         this.driver = driver;
@@ -50,16 +40,10 @@ public class OrderPageScooter {
         return driver.findElement(orderHeader).getText();
     }
     // Геттер для получения текста на кнопке для просмотра статуса заказа
-    public String getConfirmHeader() {
-        return driver.findElement(confirmHeader).getText();
-    }
+    public String getConfirmHeader() { return driver.findElement(confirmHeader).getText(); }
     // Метод для проверки открытия страницы
     public void isPageOpen(String headerText, String text) {
         assertEquals(text, headerText);
-    }
-    // Метод для принятия куки
-    public void acceptCookieButtonClick() {
-        driver.findElement(acceptCookieButton).click();
     }
     // Метод для заполнения поля * Имя
     public void setName(String name) {
@@ -75,8 +59,9 @@ public class OrderPageScooter {
     }
     // Метод для заполнения поля * Станция метро
     public void setSubway(String subway) {
+        String xpath = String.format(".//div[text()='%s']", subway);
         driver.findElement(subwayField).click();
-        driver.findElement(By.xpath(".//div[text()='"+subway+"']")).click();
+        driver.findElement(By.xpath(xpath)).click();
     }
     // Метод для заполнения поля * Телефон: на него позвонит курьер
     public void setPhoneNumber(String phoneNumber) {
@@ -92,13 +77,15 @@ public class OrderPageScooter {
     }
     // Метод для заполнения поля Срок аренды
     public void setRentalPeriod(String rentalPeriod) {
+        String xpath = String.format(".//div[text()='%s']", rentalPeriod);
         driver.findElement(aboutOrderHeader).click();
         driver.findElement(rentalPeriodField).click();
-        driver.findElement(By.xpath(".//div[text()='"+rentalPeriod+"']")).click();
+        driver.findElement(By.xpath(xpath)).click();
     }
     // Метод для заполнения поля Цвет самоката
     public void setColor(String color) {
-        driver.findElement(By.xpath(".//label[text()='"+color+"']")).click();
+        String xpath = String.format(".//label[text()='%s']", color);
+        driver.findElement(By.xpath(xpath)).click();
     }
     // Метод для заполнения поля Комментарий для курьера
     public void setComment(String comment) {
@@ -109,7 +96,5 @@ public class OrderPageScooter {
         driver.findElement(orderCreateButton).click();
     }
     // Метод для подтверждения заказа
-    public void clickOrderConfirmButton() {
-        driver.findElement(orderConfirmButton).click();
-    }
+    public void clickOrderConfirmButton() { driver.findElement(orderConfirmButton).click(); }
 }
